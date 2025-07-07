@@ -1,0 +1,18 @@
+# docker-compose.yml
+# Ver ejemplo en la guía
+
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: package-tracking-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../web:/app/web
+    environment:
+      - STATIC_DIR=/app/web
+    restart: unless-stopped

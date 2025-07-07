@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Seguimiento de Paquetería</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Seguimiento de Paquetería</h1>
+    <nav>
+        <button onclick="showSection('registro')">Registrar Paquete</button>
+        <button onclick="showSection('actualizar')">Actualizar Estado</button>
+        <button onclick="showSection('cliente')">Seguimiento Cliente</button>
+        <button onclick="showSection('dashboard')">Dashboard</button>
+    </nav>
+    <section id="registro" class="active">
+        <h2>Registrar Paquete</h2>
+        <form id="formRegistro">
+            <input type="text" name="empresa" placeholder="Empresa" required><br>
+            <input type="text" name="destinatario" placeholder="Destinatario" required><br>
+            <input type="text" name="direccion" placeholder="Dirección" required><br>
+            <input type="text" name="telefono" placeholder="Teléfono" required><br>
+            <input type="text" name="ruta" placeholder="Ruta de Entrega" required><br>
+            <button type="submit">Registrar</button>
+        </form>
+        <div id="registroMsg"></div>
+    </section>
+    <section id="actualizar">
+        <h2>Actualizar Estado de Paquete</h2>
+        <form id="formActualizar">
+            <input type="text" name="codigo" placeholder="Código de Seguimiento" required><br>
+            <select name="estado">
+                <option value="en_bodega">En Bodega</option>
+                <option value="en_transito">En Tránsito</option>
+                <option value="entregado">Entregado</option>
+            </select><br>
+            <input type="text" name="ubicacion" placeholder="Ubicación actual" required><br>
+            <button type="submit">Actualizar</button>
+        </form>
+        <div id="actualizarMsg"></div>
+    </section>
+    <section id="cliente">
+        <h2>Seguimiento de Paquete</h2>
+        <form id="formCliente">
+            <input type="text" name="codigo" placeholder="Código de Seguimiento" required>
+            <button type="submit">Consultar</button>
+        </form>
+        <div id="clienteInfo"></div>
+    </section>
+    <section id="dashboard">
+        <h2>Dashboard de Logística</h2>
+        <div id="dashboardInfo">Cargando...</div>
+    </section>
+    <script src="script.js"></script>
+</body>
+</html>
