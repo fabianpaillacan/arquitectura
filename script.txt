@@ -1,0 +1,140 @@
+================================================================================
+SISTEMA DE SEGUIMIENTO DE PAQUETERÍA - GUÍA DIDÁCTICA Y RESUMIDA
+================================================================================
+
+📋 RESUMEN GENERAL
+------------------
+Sistema web para gestionar y rastrear paquetes con roles diferenciados, actualizaciones en tiempo real y una interfaz moderna y adaptativa. El diseño prioriza la seguridad, la experiencia de usuario y la escalabilidad.
+
+================================================================================
+1. ARQUITECTURA DEL SISTEMA
+================================================================================
+
+- **Frontend (HTML/JS/Bootstrap):** Interfaz web adaptativa, validación, WebSockets, navegación por rol.
+- **Backend (FastAPI + SQLModel):** API RESTful, autenticación, lógica de negocio, WebSockets, persistencia.
+- **Base de datos (SQLite):** Usuarios, paquetes, eventos, asignaciones, auditoría completa.
+
+*Diagrama simplificado:*
+Cliente/Operador/Repartidor (Web) ⇄ WebSockets ⇄ API FastAPI ⇄ Base de datos
+
+================================================================================
+2. FLUJOS PRINCIPALES DEL SISTEMA
+================================================================================
+
+- **Autenticación:** Login, validación de sesión, adaptación de interfaz por rol.
+- **Registro de paquete:** Formulario, generación de código, evento inicial, notificación en tiempo real.
+- **Actualización de estado:** Selección de paquete, cambio de estado, evento, notificación.
+- **Asignación de repartidor:** Selección, desactivación de asignaciones previas, notificación personalizada.
+- **Seguimiento cliente:** Ingreso de código, validación de propiedad, historial visual.
+
+================================================================================
+3. FUNCIONES JAVASCRIPT CLAVE
+================================================================================
+
+- **toastAlert(msg, type):** Muestra alertas temporales.
+- **pill(estado):** Genera badges visuales para estados.
+- **mostrarInterfazPorRol(rol):** Adapta la UI según el rol.
+- **conectarWebSocket(userId):** Establece y mantiene la conexión WebSocket.
+- **fetchAuth(url, options):** Peticiones autenticadas con token.
+- **mostrarLogin()/mostrarAplicacion():** Alterna entre login y app principal.
+- **cerrarSesion():** Limpia sesión y cierra WebSocket.
+- **loadRecentUpdates(), loadDashboard():** Carga datos dinámicos.
+- **createHistoryModal(), showHistoryModal():** Muestra historial de eventos.
+
+*Todos los formularios y acciones relevantes tienen listeners y validación.*
+
+================================================================================
+4. ENDPOINTS DE LA API
+================================================================================
+
+- **/auth/register:** Registrar usuario
+- **/auth/login:** Login
+- **/paquetes:** Registrar/listar paquetes
+- **/paquetes/estado:** Actualizar estado
+- **/paquetes/asignar:** Asignar repartidor
+- **/dashboard:** Estadísticas
+- **/ws/{user_id}:** WebSocket por usuario
+- **/usuarios:** Gestión de usuarios (admin)
+- **/health:** Estado del sistema
+
+================================================================================
+5. ESTRUCTURA DE DATOS PRINCIPAL
+================================================================================
+
+- **Usuario:** id, email, nombre, password_hash, rol, zona_id, activo, fecha_registro
+- **Paquete:** codigo, empresa, destinatario, direccion, telefono, ruta, estado, ubicacion, cliente_id
+- **Evento:** id, fecha, estado, ubicacion, paquete_codigo, usuario_id, comentario
+- **AsignacionPaquete:** id, paquete_codigo, repartidor_id, fecha_asignacion, activa
+- **Rol (enum):** cliente, operador, repartidor, admin
+
+================================================================================
+6. INTERFACES DE USUARIO Y EXPERIENCIA
+================================================================================
+
+- **Login:** Formulario simple, validación, persistencia de sesión.
+- **Cliente:** Seguimiento, mis paquetes, compra simplificada.
+- **Operador:** Registro, actualización, asignación, dashboard.
+- **Repartidor:** Paquetes asignados, actualización, ruta, dashboard.
+- **Admin:** Gestión de usuarios, reportes, dashboard global.
+- **Elementos comunes:** Header, navegación dinámica, notificaciones, modales, timeline visual.
+
+================================================================================
+7. ESTADOS DE PAQUETES Y AUDITORÍA
+================================================================================
+
+- **Estados:** procesando, en_bodega, en_transito, en_reparto, entregado, devuelto
+- **Flujo:** procesando → en_bodega → en_transito → en_reparto → entregado
+- **Auditoría:** Cada cambio de estado genera un evento con usuario, fecha y comentario.
+
+================================================================================
+8. MANEJO DE ERRORES Y SEGURIDAD
+================================================================================
+
+- **Errores comunes:** 401 (auth), 403 (permisos), 404 (no encontrado), 400 (validación)
+- **Frontend:** Toasts, validación de formularios, spinners de carga.
+- **Backend:** Validación Pydantic, decoradores de permisos, auditoría de acciones.
+- **Seguridad:** Contraseñas hasheadas, validación de entrada, CORS, protección CSRF implícita.
+
+================================================================================
+9. TECNOLOGÍAS Y HERRAMIENTAS
+================================================================================
+
+- **Frontend:** HTML5, CSS3, JS ES6+, Bootstrap 5, Bootstrap Icons
+- **Backend:** Python 3.8+, FastAPI, SQLModel, SQLAlchemy, Pydantic, Uvicorn
+- **Base de datos:** SQLite (por defecto), PostgreSQL (opcional)
+- **Comunicación:** WebSockets, HTTP/HTTPS, JSON
+- **Despliegue:** Docker, Docker Compose, variables de entorno
+
+================================================================================
+10. ROLES, PERMISOS Y AUTENTICACIÓN
+================================================================================
+
+- **Cliente:** ver_mis_paquetes, seguimiento_cliente
+- **Operador:** registrar_paquetes, actualizar_estado, asignar_repartidor, ver_todos_paquetes
+- **Repartidor:** ver_mis_paquetes, actualizar_estado, ver_ruta
+- **Admin:** * (todos los permisos)
+- **Permisos:** Decoradores en endpoints, validación de propiedad, auditoría.
+- **Autenticación:** Token simulado (JWT), almacenado en localStorage, verificación automática.
+
+================================================================================
+11. WEBSOCKETS Y TIEMPO REAL
+================================================================================
+
+- **ConnectionManager:** Maneja conexiones, envía mensajes a usuarios específicos, reconexión automática.
+- **Tipos de mensajes:** paquete_registrado, paquete_actualizado, paquete_asignado.
+- **Ventajas:** Comunicación en tiempo real, menor latencia, notificaciones específicas, escalabilidad preparada.
+
+================================================================================
+🎯 RESUMEN DE FUNCIONALIDADES Y SOPORTE
+================================================================================
+
+- **Implementado:**
+  - Autenticación y roles, WebSockets, interfaz adaptativa, API RESTful, auditoría, dashboard, historial, asignación, seguimiento.
+- **Técnico:**
+  - Código modular, manejo de errores, documentación, escalabilidad, seguridad, responsive, persistencia de sesión.
+- **Próximos pasos:**
+  - JWT real, tests automáticos, rate limiting, logging estructurado, microservicios.
+- **Soporte:**
+  - Revisar documentación, logs, conexiones WebSocket, permisos, integridad de base de datos.
+
+================================================================================ 

@@ -21,793 +21,550 @@
   </head>
 
   <body>
-    <!-- ENCABEZADO PRINCIPAL -->
-    <header id="hero" class="mb-4">
-      <h1>
-        <i class="bi bi-box-seam-fill"></i> Sistema de Seguimiento de Paquetería
-      </h1>
-      <p>Gestión integral de envíos y seguimiento en tiempo real</p>
-    </header>
-
-    <main class="container pb-5">
-      <!-- NAVIGATION -->
-      <ul
-        id="navTabs"
-        class="nav nav-pills nav-fill flex-column flex-sm-row mb-4"
-      >
-        <li class="nav-item">
-          <a
-            class="nav-link active"
-            href="#"
-            onclick="showSection('secRegistro')"
-            ><i class="bi bi-box"></i> Registrar Paquete</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="#"
-            onclick="showSection('secActualizar')"
-            ><i class="bi bi-arrow-repeat"></i> Actualizar Estado</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="#"
-            onclick="showSection('secCliente')"
-            ><i class="bi bi-geo-alt"></i> Seguimiento Cliente</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="#"
-            onclick="showSection('secDashboard')"
-            ><i class="bi bi-bar-chart"></i> Dashboard</a
-          >
-        </li>
-      </ul>
-
-      <!-- ============ SECCIÓN REGISTRAR ============== -->
-      <section id="secRegistro" class="active">
-        <div class="row g-4">
-          <div class="col-lg-7">
-            <div class="card card-border">
-              <div class="card-header card-header-gradient">
-                <h5 class="mb-0 text-white">
-                  <i class="bi bi-box2-fill"></i> Registrar Nuevo Paquete
-                </h5>
-                <small class="text-light">
-                  Complete la información del paquete para iniciar el seguimiento
-                </small>
-              </div>
-              <div class="card-body">
-                <form id="formRegistro" class="row g-3">
-                  <div class="col-md-7">
-                    <label class="form-label"><i class="bi bi-building"></i>
-                      Empresa</label
-                    >
-                    <input
-                      type="text"
-                      name="empresa"
-                      class="form-control"
-                      placeholder="Nombre de la empresa"
-                      required
-                    />
-                  </div>
-                  <div class="col-md-5">
-                    <label class="form-label"><i class="bi bi-telephone"></i>
-                      Teléfono</label
-                    >
-                    <input
-                      type="tel"
-                      name="telefono"
-                      class="form-control"
-                      placeholder="+34 600 000 000"
-                      required
-                    />
-                  </div>
-
-                  <div class="col-12">
-                    <label class="form-label"><i class="bi bi-geo"></i> Destino</label>
-                    <input
-                      type="text"
-                      name="destinatario"
-                      class="form-control"
-                      placeholder="Ciudad de destino"
-                      required
-                    />
-                  </div>
-
-                  <div class="col-12">
-                    <label class="form-label"><i class="bi bi-signpost-2"></i>
-                      Dirección Completa</label
-                    >
-                    <input
-                      type="text"
-                      name="direccion"
-                      class="form-control"
-                      placeholder="Calle, número, código postal"
-                      required
-                    />
-                  </div>
-
-                  <div class="col-12">
-                    <label class="form-label"><i class="bi bi-truck"></i>
-                      Ruta de Entrega</label
-                    >
-                    <input
-                      type="text"
-                      name="ruta"
-                      class="form-control"
-                      placeholder="Código de ruta"
-                    />
-                  </div>
-
-                  <div class="col-12 d-grid mt-3">
-                    <button class="btn btn-primary" type="submit">
-                      <i class="bi bi-box"></i> Registrar Paquete
-                    </button>
-                  </div>
-                </form>
-                <div id="registroMsg" class="mt-3"></div>
-              </div>
+    <!-- ===== SECCIÓN DE LOGIN ===== -->
+    <div id="loginSection" style="display: none;">
+      <div class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-gradient-primary">
+        <div class="card shadow-lg" style="max-width: 450px;">
+          <div class="card-body p-5">
+            <div class="text-center mb-4">
+              <i class="bi bi-box-seam-fill text-primary" style="font-size: 3rem;"></i>
+              <h3 class="mt-3">Sistema de Seguimiento</h3>
+              <p class="text-muted">Inicia sesión o regístrate para continuar</p>
             </div>
-          </div>
-
-          <!-- proceso de seguimiento -->
-          <div class="col-lg-5">
-            <div class="card card-border h-100">
-              <div class="card-body">
-                <h5 class="card-title mb-4">
-                  <i class="bi bi-diagram-3"></i> Proceso de Seguimiento
-                </h5>
-                <ul class="list-unstyled lh-lg">
-                  <li>
-                    <span class="status-pill info"
-                      ><i class="bi bi-box"></i> 1. Registro</span
-                    ><br /><small class="text-muted"
-                      >El paquete se registra en el sistema</small
-                    >
-                  </li>
-                  <li class="mt-3">
-                    <span class="status-pill warning"
-                      ><i class="bi bi-truck"></i> 2. En Tránsito</span
-                    ><br /><small class="text-muted"
-                      >El paquete está en camino al destino</small
-                    >
-                  </li>
-                  <li class="mt-3">
-                    <span class="status-pill success"
-                      ><i class="bi bi-check-circle"></i> 3. Entregado</span
-                    ><br /><small class="text-muted"
-                      >El paquete ha sido entregado exitosamente</small
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ SECCIÓN ACTUALIZAR ============== -->
-      <section id="secActualizar">
-        <div class="row g-4">
-          <div class="col-lg-8">
-            <div class="card card-border">
-              <div
-                class="card-header text-white"
-                style="background: linear-gradient(90deg, #ff4d4f 0%, #d91d1f 100%)"
-              >
-                <h5 class="mb-0">
-                  <i class="bi bi-arrow-repeat"></i> Actualizar Estado del
-                  Paquete
-                </h5>
-                <small>Actualice el estado y ubicación del paquete en tiempo real</small>
-              </div>
-
-              <div class="card-body">
-                <form id="formActualizar" class="row g-3">
-                  <div class="col-12 col-md-6">
-                    <label class="form-label"><i class="bi bi-upc-scan"></i>
-                      Código de Seguimiento</label
-                    >
-                    <input
-                      type="text"
-                      name="codigo"
-                      class="form-control"
-                      placeholder="Ej: PKG001, TRK-2024-001"
-                      required
-                    />
-                  </div>
-                  <div class="col-12 col-md-3">
-                    <label class="form-label"><i class="bi bi-info-circle"></i>
-                      Nuevo Estado</label
-                    >
-                    <select name="estado" class="form-select">
-                      <option value="procesando" selected>Procesando</option>
-                      <option value="en_bodega">En Bodega</option>
-                      <option value="en_transito">En Tránsito</option>
-                      <option value="en_reparto">En Reparto</option>
-                      <option value="entregado">Entregado</option>
-                      <option value="devuelto">Devuelto</option>
-                    </select>
-                  </div>
-                  <div class="col-12 col-md-3">
-                    <label class="form-label"><i class="bi bi-flag"></i>
-                      Prioridad</label
-                    >
-                    <select class="form-select">
-                      <option>Normal</option>
-                      <option>Alta</option>
-                      <option>Urgente</option>
-                    </select>
-                  </div>
-
-                  <div class="col-12">
-                    <label class="form-label"><i class="bi bi-geo-alt"></i>
-                      Ubicación Actual</label
-                    >
-                    <input
-                      type="text"
-                      name="ubicacion"
-                      class="form-control"
-                      placeholder="Ej: Centro de Distribución Madrid, Ruta 15-A"
-                    />
-                  </div>
-
-                  <div class="col-12">
-                    <label class="form-label"><i class="bi bi-journal-text"></i>
-                      Notas Adicionales</label
-                    >
-                    <textarea class="form-control" rows="3"></textarea>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label class="form-label"><i class="bi bi-calendar"></i>
-                      Entrega Estimada</label
-                    >
-                    <input type="datetime-local" class="form-control" />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label"><i class="bi bi-person"></i>
-                      Transportista</label
-                    >
-                    <input type="text" class="form-control" />
-                  </div>
-
-                  <div class="col-12 d-flex gap-2 mt-4">
-                    <button class="btn btn-danger flex-grow-1" type="submit">
-                      <i class="bi bi-arrow-repeat"></i> Actualizar Estado
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary">
-                      <i class="bi bi-clock-history"></i> Ver Historial
-                    </button>
-                  </div>
-                </form>
-                <div id="actualizarMsg" class="mt-3"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4">
-            <!-- estados disponibles -->
-            <div class="card card-border mb-4">
-              <div class="card-body">
-                <h6 class="mb-3">
-                  <i class="bi bi-list-check"></i> Estados Disponibles
-                </h6>
-                <ul class="list-group list-group-flush small">
-                  <li class="list-group-item">Procesando</li>
-                  <li class="list-group-item">En Bodega</li>
-                  <li class="list-group-item">En Tránsito</li>
-                  <li class="list-group-item">En Reparto</li>
-                  <li class="list-group-item">Entregado</li>
-                  <li class="list-group-item">Devuelto</li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- actualizaciones recientes -->
-            <div class="card card-border">
-              <div class="card-body">
-                <h6 class="mb-3">
-                  <i class="bi bi-clock-history"></i> Actualizaciones Recientes
-                </h6>
-                <div id="recentUpdates" class="small"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ SECCIÓN CLIENTE ============== -->
-      <section id="secCliente">
-        <div class="card card-border">
-          <div
-            class="card-header text-white"
-            style="background: linear-gradient(90deg, #00c851 0%, #007e33 100%)"
-          >
-            <h5 class="mb-0">
-              <i class="bi bi-geo-alt-fill"></i> Seguimiento para Clientes
-            </h5>
-          </div>
-          <div class="card-body">
-            <form id="formCliente" class="row g-3 justify-content-center">
-              <div class="col-md-4">
-                <label class="form-label">Número de Seguimiento</label>
-                <input
-                  type="text"
-                  name="codigo"
-                  class="form-control"
-                  placeholder="Ingrese su número de seguimiento"
-                  required
-                />
-              </div>
-              <div class="col-12 d-flex justify-content-center">
-                <button class="btn btn-success" type="submit">
-                  <i class="bi bi-search"></i> Rastrear Paquete
+            
+            <!-- Tabs para Login/Registro -->
+            <ul class="nav nav-pills nav-fill mb-4" id="authTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="login-tab" data-bs-toggle="pill" data-bs-target="#login-tab-pane" type="button" role="tab">
+                  <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
                 </button>
-              </div>
-            </form>
-
-            <!-- consejos de búsqueda -->
-            <div class="alert alert-info mt-4" role="alert">
-              <i class="bi bi-lightbulb-fill"></i> <strong>Consejos de búsqueda:</strong>
-              <ul class="mb-0 small ps-3">
-                <li>El número de seguimiento suele tener 8‑12 caracteres</li>
-                <li>Puedes encontrarlo en tu recibo o email de confirmación</li>
-                <li>No distingue entre mayúsculas y minúsculas</li>
-              </ul>
-            </div>
-
-            <div id="clienteInfo" class="mt-4"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ SECCIÓN DASHBOARD ============== -->
-      <section id="secDashboard">
-        <div class="row g-4" id="dashboardInfo">
-          <!-- tarjetas métricas renderizadas vía JS -->
-        </div>
-      </section>
-    </main>
-
-    <!-- Bootstrap Bundle & custom scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-      // utilidades breves
-      function toastAlert(msg, type = "info") {
-        const placeholder = document.createElement("div");
-        placeholder.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3" role="alert" style="z-index:1080;">${msg}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
-        document.body.appendChild(placeholder.firstElementChild);
-        setTimeout(() => placeholder.remove(), 5000);
-      }
-
-      // helper → genera un HTML para un estado en "pill"
-      function pill(estado) {
-        const map = {
-          procesando: "info",
-          en_bodega: "secondary",
-          en_transito: "warning",
-          en_reparto: "warning",
-          entregado: "success",
-          devuelto: "danger",
-        };
-        const cls = map[estado] || "secondary";
-        return `<span class="badge bg-${cls} text-capitalize">${estado.replace("_", " ")}</span>`;
-      }
-
-      // navegación entre secciones
-      const sections = document.querySelectorAll("section");
-      function showSection(id) {
-        sections.forEach((s) => s.classList.toggle("active", s.id === id));
-        document.querySelectorAll("#navTabs .nav-link").forEach((l) => {
-          l.classList.toggle("active", l.getAttribute("onclick").includes(id));
-        });
-        if (id === "secDashboard") loadDashboard();
-        if (id === "secActualizar") loadRecentUpdates();
-      }
-
-      // FUNCIÓN PARA CREAR EL MODAL DE HISTORIAL
-      function createHistoryModal() {
-        // Verificar si el modal ya existe
-        let modalEl = document.getElementById("historialModal");
-        if (modalEl) {
-          return modalEl;
-        }
-
-        // Crear el modal
-        modalEl = document.createElement("div");
-        modalEl.className = "modal fade";
-        modalEl.id = "historialModal";
-        modalEl.tabIndex = -1;
-        modalEl.setAttribute("aria-labelledby", "historialModalLabel");
-        modalEl.setAttribute("aria-hidden", "true");
-        
-        modalEl.innerHTML = `
-          <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-              <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="historialModalLabel">
-                  <i class="bi bi-clock-history"></i> Historial del Paquete: <span id="histCode"></span>
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body p-0">
-                <div id="historialContent">
-                  <div class="text-center p-4">
-                    <div class="spinner-border text-primary" role="status">
-                      <span class="visually-hidden">Cargando...</span>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="register-tab" data-bs-toggle="pill" data-bs-target="#register-tab-pane" type="button" role="tab">
+                  <i class="bi bi-person-plus"></i> Registrarse
+                </button>
+              </li>
+            </ul>
+            
+            <div class="tab-content" id="authTabsContent">
+              <!-- TAB LOGIN -->
+              <div class="tab-pane fade show active" id="login-tab-pane" role="tabpanel">
+                <form id="formLogin">
+                  <div class="mb-3">
+                    <label class="form-label"><i class="bi bi-envelope"></i> Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label"><i class="bi bi-lock"></i> Contraseña</label>
+                    <input type="password" name="password" class="form-control" required>
+                  </div>
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                    </button>
+                  </div>
+                </form>
+                
+                <!-- Usuarios de Prueba -->
+                <div class="mt-4">
+                  <div class="card bg-light">
+                    <div class="card-body p-3">
+                      <h6 class="card-title mb-3">
+                        <i class="bi bi-info-circle"></i> Usuarios de Prueba
+                      </h6>
+                      <div class="row g-2">
+                        <div class="col-6">
+                          <button class="btn btn-outline-primary btn-sm w-100" onclick="loginTestUser('admin@test.com', 'admin123')">
+                            <i class="bi bi-shield-check"></i> Admin
+                          </button>
+                        </div>
+                        <div class="col-6">
+                          <button class="btn btn-outline-success btn-sm w-100" onclick="loginTestUser('operador@test.com', 'operador123')">
+                            <i class="bi bi-person-gear"></i> Operador
+                          </button>
+                        </div>
+                        <div class="col-6">
+                          <button class="btn btn-outline-warning btn-sm w-100" onclick="loginTestUser('repartidor@test.com', 'repartidor123')">
+                            <i class="bi bi-truck"></i> Repartidor
+                          </button>
+                        </div>
+                        <div class="col-6">
+                          <button class="btn btn-outline-info btn-sm w-100" onclick="loginTestUser('cliente@test.com', 'cliente123')">
+                            <i class="bi bi-person"></i> Cliente
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                  <i class="bi bi-x-circle"></i> Cerrar
+              
+              <!-- TAB REGISTRO -->
+              <div class="tab-pane fade" id="register-tab-pane" role="tabpanel">
+                <form id="formRegistro">
+                  <div class="mb-3">
+                    <label class="form-label"><i class="bi bi-person"></i> Nombre Completo</label>
+                    <input type="text" name="nombre" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label"><i class="bi bi-envelope"></i> Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label"><i class="bi bi-lock"></i> Contraseña</label>
+                    <input type="password" name="password" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label"><i class="bi bi-shield-check"></i> Rol</label>
+                    <select name="rol" class="form-select" required>
+                      <option value="">Selecciona un rol</option>
+                      <option value="cliente">Cliente</option>
+                      <option value="operador">Operador</option>
+                      <option value="repartidor">Repartidor</option>
+                    </select>
+                  </div>
+                  <div class="mb-3" id="zonaField" style="display: none;">
+                    <label class="form-label"><i class="bi bi-geo-alt"></i> Zona de Reparto</label>
+                    <input type="text" name="zona_id" class="form-control" placeholder="Ej: Zona Norte, Centro, etc.">
+                  </div>
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                      <i class="bi bi-person-plus"></i> Registrarse
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== APLICACIÓN PRINCIPAL ===== -->
+    <div id="mainContent" style="display: none;">
+      <!-- ENCABEZADO PRINCIPAL -->
+      <header id="hero" class="mb-4">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col">
+              <h1>
+                <i class="bi bi-box-seam-fill"></i> Sistema de Seguimiento de Paquetería
+              </h1>
+              <p>Gestión integral de envíos y seguimiento en tiempo real</p>
+            </div>
+            <div class="col-auto">
+              <div class="d-flex align-items-center gap-3">
+                <div class="text-end">
+                  <small class="text-muted">Bienvenido</small>
+                  <div id="userInfo" class="fw-bold"></div>
+                </div>
+                <button id="logoutBtn" class="btn btn-outline-danger btn-sm">
+                  <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
                 </button>
               </div>
             </div>
-          </div>`;
-        
-        document.body.appendChild(modalEl);
-        return modalEl;
-      }
+          </div>
+        </div>
+      </header>
 
-      // FUNCIÓN PARA MOSTRAR EL HISTORIAL
-      function showHistoryModal(codigo, paqueteData) {
-        const modalEl = createHistoryModal();
-        
-        // Actualizar el código en el título
-        modalEl.querySelector("#histCode").textContent = codigo;
-        
-        const historialContent = modalEl.querySelector("#historialContent");
-        
-        // Mostrar información del paquete y eventos
-        if (paqueteData && paqueteData.eventos && paqueteData.eventos.length > 0) {
-          const eventos = paqueteData.eventos;
-          
-          historialContent.innerHTML = `
-            <!-- Información del paquete -->
-            <div class="card border-0">
-              <div class="card-header bg-light">
-                <h6 class="mb-0"><i class="bi bi-info-circle"></i> Información del Paquete</h6>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-6">
-                    <p><strong>Empresa:</strong> ${paqueteData.empresa}</p>
-                    <p><strong>Destinatario:</strong> ${paqueteData.destinatario}</p>
-                    <p><strong>Dirección:</strong> ${paqueteData.direccion}</p>
-                  </div>
-                  <div class="col-md-6">
-                    <p><strong>Teléfono:</strong> ${paqueteData.telefono}</p>
-                    <p><strong>Ruta:</strong> ${paqueteData.ruta}</p>
-                    <p><strong>Estado Actual:</strong> ${pill(paqueteData.estado)}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Timeline de eventos -->
-            <div class="card border-0">
-              <div class="card-header bg-light">
-                <h6 class="mb-0"><i class="bi bi-clock-history"></i> Historial de Cambios (${eventos.length} eventos)</h6>
-              </div>
-              <div class="card-body p-0">
-                <div class="timeline-container">
-                  ${eventos.map((evento, index) => {
-                    const fecha = new Date(evento.fecha);
-                    const isLatest = index === eventos.length - 1;
-                    
-                    return `
-                      <div class="timeline-item ${isLatest ? 'latest' : ''}">
-                        <div class="timeline-marker ${isLatest ? 'bg-success' : 'bg-primary'}">
-                          <i class="bi bi-${getEventIcon(evento.estado)} text-white"></i>
-                        </div>
-                        <div class="timeline-content">
-                          <div class="timeline-header">
-                            <h6 class="mb-1">${pill(evento.estado)}</h6>
-                            <small class="text-muted">
-                              <i class="bi bi-calendar"></i> ${fecha.toLocaleDateString('es-ES')} 
-                              <i class="bi bi-clock"></i> ${fecha.toLocaleTimeString('es-ES')}
-                            </small>
-                          </div>
-                          <p class="mb-0">
-                            <i class="bi bi-geo-alt"></i> <strong>Ubicación:</strong> ${evento.ubicacion}
-                          </p>
-                        </div>
-                      </div>`;
-                  }).join('')}
-                </div>
-              </div>
-            </div>`;
-        } else {
-          historialContent.innerHTML = `
-            <div class="text-center p-5">
-              <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
-              <h5 class="mt-3">Sin eventos registrados</h5>
-              <p class="text-muted">No se encontraron eventos para este paquete.</p>
-            </div>`;
-        }
-        
-        // Mostrar el modal
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
-      }
+      <main class="container pb-5">
+        <!-- NAVIGATION -->
+        <ul id="navTabs" class="nav nav-pills nav-fill flex-column flex-sm-row mb-4">
+          <!-- La navegación se genera dinámicamente según el rol -->
+        </ul>
 
-      // FUNCIÓN AUXILIAR PARA OBTENER ICONOS DE EVENTOS
-      function getEventIcon(estado) {
-        const iconMap = {
-          procesando: 'arrow-clockwise',
-          en_bodega: 'house',
-          en_transito: 'truck',
-          en_reparto: 'person-walking',
-          entregado: 'check-circle',
-          devuelto: 'arrow-return-left'
-        };
-        return iconMap[estado] || 'circle';
-      }
-
-      /* Registro*/
-      document.getElementById("formRegistro").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target).entries());
-        try {
-          const res = await fetch("/paquetes", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-          });
-          if (!res.ok) throw new Error();
-          const pkg = await res.json();
-          toastAlert(`Paquete registrado. Código: <strong>${pkg.codigo}</strong>`, "success");
-          e.target.reset();
-          loadDashboard();
-          loadUpdates();
-        } catch (err) {
-          toastAlert("Error al registrar paquete", "danger");
-        }
-      });
-
-      /* Actualizar  */
-      document.getElementById("formActualizar").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target).entries());
-        try {
-          const res = await fetch("/paquetes/estado", {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-          });
-          if (!res.ok) throw new Error();
-          toastAlert("Estado actualizado", "success");
-          e.target.reset();
-          loadDashboard();
-          loadUpdates();
-        } catch (err) {
-          toastAlert("No se pudo actualizar el paquete", "danger");
-        }
-      });
-
-      /*Cliente */
-      document.getElementById("formCliente").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const code = e.target.codigo.value.trim();
-        const div = document.getElementById("clienteInfo");
-        
-        if (!code) {
-          div.innerHTML = `<div class="alert alert-warning">Por favor, ingrese un código de seguimiento</div>`;
-          return;
-        }
-        
-        div.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary"></div><p class="mt-2">Buscando paquete...</p></div>';
-        
-        try {
-          const res = await fetch(`/paquetes/${encodeURIComponent(code)}`);
-          
-          if (res.ok) {
-            const p = await res.json();
-            const eventos = p.eventos || [];
-            
-            const eventosHtml = eventos.length > 0 
-              ? eventos.map(ev => `
-                  <tr>
-                    <td>${new Date(ev.fecha).toLocaleString('es-ES')}</td>
-                    <td>${pill(ev.estado)}</td>
-                    <td><i class="bi bi-geo-alt"></i> ${ev.ubicacion}</td>
-                  </tr>`).join("")
-              : '<tr><td colspan="3" class="text-center text-muted">Sin eventos registrados</td></tr>';
-            
-            div.innerHTML = `
+        <!-- ============ SECCIÓN REGISTRAR PAQUETE ============== -->
+        <section id="secRegistro" class="active" data-rol="operador,admin">
+          <div class="row g-4">
+            <div class="col-lg-7">
               <div class="card card-border">
-                <div class="card-header bg-success text-white">
-                  <h5 class="mb-0"><i class="bi bi-box-seam"></i> Paquete encontrado: ${p.codigo}</h5>
+                <div class="card-header card-header-gradient">
+                  <h5 class="mb-0 text-white">
+                    <i class="bi bi-box2-fill"></i> Registrar Nuevo Paquete
+                  </h5>
+                  <small class="text-light">
+                    Complete la información del paquete para iniciar el seguimiento
+                  </small>
                 </div>
                 <div class="card-body">
-                  <div class="row mb-3">
+                  <form id="formRegistroPaquete" class="row g-3">
+                    <div class="col-md-7">
+                      <label class="form-label"><i class="bi bi-building"></i>
+                        Empresa</label
+                      >
+                      <input
+                        type="text"
+                        name="empresa"
+                        class="form-control"
+                        placeholder="Nombre de la empresa"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-5">
+                      <label class="form-label"><i class="bi bi-telephone"></i>
+                        Teléfono</label
+                      >
+                      <input
+                        type="tel"
+                        name="telefono"
+                        class="form-control"
+                        placeholder="+34 600 000 000"
+                        required
+                      />
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label"><i class="bi bi-geo"></i> Destino</label>
+                      <input
+                        type="text"
+                        name="destinatario"
+                        class="form-control"
+                        placeholder="Ciudad de destino"
+                        required
+                      />
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label"><i class="bi bi-signpost-2"></i>
+                        Dirección Completa</label
+                      >
+                      <input
+                        type="text"
+                        name="direccion"
+                        class="form-control"
+                        placeholder="Calle, número, código postal"
+                        required
+                      />
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label"><i class="bi bi-truck"></i>
+                        Ruta de Entrega</label
+                      >
+                      <input
+                        type="text"
+                        name="ruta"
+                        class="form-control"
+                        placeholder="Código de ruta"
+                      />
+                    </div>
+
+                    <div class="col-12 d-grid mt-3">
+                      <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-box"></i> Registrar Paquete
+                      </button>
+                    </div>
+                  </form>
+                  <div id="registroMsg" class="mt-3"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- proceso de seguimiento -->
+            <div class="col-lg-5">
+              <div class="card card-border h-100">
+                <div class="card-body">
+                  <h5 class="card-title mb-4">
+                    <i class="bi bi-diagram-3"></i> Proceso de Seguimiento
+                  </h5>
+                  <ul class="list-unstyled lh-lg">
+                    <li>
+                      <span class="status-pill info"
+                        ><i class="bi bi-box"></i> 1. Registro</span
+                      ><br /><small class="text-muted"
+                        >El paquete se registra en el sistema</small
+                      >
+                    </li>
+                    <li class="mt-3">
+                      <span class="status-pill warning"
+                        ><i class="bi bi-truck"></i> 2. En Tránsito</span
+                      ><br /><small class="text-muted"
+                        >El paquete está en camino al destino</small
+                      >
+                    </li>
+                    <li class="mt-3">
+                      <span class="status-pill success"
+                        ><i class="bi bi-check-circle"></i> 3. Entregado</span
+                      ><br /><small class="text-muted"
+                        >El paquete ha sido entregado exitosamente</small
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ SECCIÓN ACTUALIZAR ESTADO ============== -->
+        <section id="secActualizar" data-rol="operador,repartidor,admin">
+          <div class="row g-4">
+            <div class="col-lg-8">
+              <div class="card card-border">
+                <div class="card-header card-header-gradient">
+                  <h5 class="mb-0 text-white">
+                    <i class="bi bi-arrow-repeat"></i> Actualizar Estado de Paquete
+                  </h5>
+                  <small class="text-light">
+                    Actualice el estado y ubicación de un paquete en tiempo real
+                  </small>
+                </div>
+                <div class="card-body">
+                  <form id="formActualizar" class="row g-3">
                     <div class="col-md-6">
-                      <p><strong><i class="bi bi-building"></i> Empresa:</strong> ${p.empresa}</p>
-                      <p><strong><i class="bi bi-geo-alt"></i> Destinatario:</strong> ${p.destinatario}</p>
-                      <p><strong><i class="bi bi-telephone"></i> Teléfono:</strong> ${p.telefono}</p>
+                      <label class="form-label"><i class="bi bi-upc-scan"></i>
+                        Código de Seguimiento</label
+                      >
+                      <input
+                        type="text"
+                        name="codigo"
+                        class="form-control"
+                        placeholder="PKG-XXXXXXXX"
+                        required
+                      />
                     </div>
                     <div class="col-md-6">
-                      <p><strong><i class="bi bi-truck"></i> Ruta:</strong> ${p.ruta}</p>
-                      <p><strong><i class="bi bi-info-circle"></i> Estado actual:</strong> ${pill(p.estado)}</p>
-                      <p><strong><i class="bi bi-geo"></i> Ubicación actual:</strong> ${p.ubicacion}</p>
+                      <label class="form-label"><i class="bi bi-geo-alt"></i>
+                        Ubicación Actual</label
+                      >
+                      <input
+                        type="text"
+                        name="ubicacion"
+                        class="form-control"
+                        placeholder="Centro de distribución"
+                        required
+                      />
                     </div>
-                  </div>
-                  
-                  <h6><i class="bi bi-clock-history"></i> Historial de seguimiento:</h6>
-                  <div class="table-responsive">
-                    <table class="table table-sm table-striped">
-                      <thead class="table-light">
-                        <tr>
-                          <th><i class="bi bi-calendar"></i> Fecha y Hora</th>
-                          <th><i class="bi bi-info-circle"></i> Estado</th>
-                          <th><i class="bi bi-geo-alt"></i> Ubicación</th>
-                        </tr>
-                      </thead>
-                      <tbody>${eventosHtml}</tbody>
-                    </table>
+                    <div class="col-md-6">
+                      <label class="form-label"><i class="bi bi-arrow-repeat"></i>
+                        Nuevo Estado</label
+                      >
+                      <select name="estado" class="form-select" required>
+                        <option value="">Seleccionar estado...</option>
+                        <option value="procesando">Procesando</option>
+                        <option value="en_bodega">En Bodega</option>
+                        <option value="en_transito">En Tránsito</option>
+                        <option value="en_reparto">En Reparto</option>
+                        <option value="entregado">Entregado</option>
+                        <option value="devuelto">Devuelto</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label"><i class="bi bi-chat"></i>
+                        Comentario (Opcional)</label
+                      >
+                      <input
+                        type="text"
+                        name="comentario"
+                        class="form-control"
+                        placeholder="Notas adicionales"
+                      />
+                    </div>
+                    <div class="col-12 d-flex gap-2">
+                      <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-check-circle"></i> Actualizar Estado
+                      </button>
+                      <button class="btn btn-outline-secondary" type="button">
+                        <i class="bi bi-clock-history"></i> Ver Historial
+                      </button>
+                    </div>
+                  </form>
+                  <div id="actualizarMsg" class="mt-3"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel derecho con actualizaciones recientes -->
+            <div class="col-lg-4">
+              <div class="card card-border h-100">
+                <div class="card-header">
+                  <h6 class="mb-0">
+                    <i class="bi bi-clock-history"></i> Actualizaciones Recientes
+                  </h6>
+                </div>
+                <div class="card-body">
+                  <div id="recentUpdates">
+                    <!-- Se carga dinámicamente -->
                   </div>
                 </div>
-              </div>`;
-          } else if (res.status === 404) {
-            div.innerHTML = `<div class="alert alert-warning"><i class="bi bi-exclamation-triangle"></i> No se encontró ningún paquete con el código "<strong>${code}</strong>"</div>`;
-          } else {
-            throw new Error(`Error ${res.status}`);
-          }
-        } catch (err) {
-          console.error("Error al buscar paquete:", err);
-          div.innerHTML = `<div class="alert alert-danger"><i class="bi bi-x-circle"></i> Error al buscar el paquete. Verifique el código e intente nuevamente.</div>`;
-        }
-      });
-
-      /* Dashboard & Recientes */
-      async function loadDashboard() {
-        const res = await fetch("/dashboard");
-        if (!res.ok) return;
-        const d = await res.json();
-        const row = document.getElementById("dashboardInfo");
-        row.innerHTML = `
-          <div class="col-6 col-md-3">
-            <div class="card card-border text-center py-3">
-              <div class="card-body">
-                <i class="bi bi-box fs-3 text-primary"></i>
-                <h5 class="metric-num">${d.total}</h5>
-                <p class="text-muted mb-0">Paquetes Activos</p>
               </div>
             </div>
           </div>
-          <div class="col-6 col-md-3">
-            <div class="card card-border text-center py-3">
-              <div class="card-body">
-                <i class="bi bi-truck fs-3 text-warning"></i>
-                <h5 class="metric-num">${d.en_transito}</h5>
-                <p class="text-muted mb-0">En Tránsito</p>
+        </section>
+
+        <!-- ============ SECCIÓN ASIGNAR REPARTIDOR ============== -->
+        <section id="secAsignar" data-rol="operador,admin">
+          <div class="row g-4">
+            <div class="col-lg-8">
+              <div class="card card-border">
+                <div class="card-header card-header-gradient">
+                  <h5 class="mb-0 text-white">
+                    <i class="bi bi-person-plus"></i> Asignar Repartidor
+                  </h5>
+                  <small class="text-light">
+                    Asigne paquetes a repartidores para la entrega
+                  </small>
+                </div>
+                <div class="card-body">
+                  <form id="formAsignar" class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label"><i class="bi bi-upc-scan"></i>
+                        Paquete</label
+                      >
+                      <select
+                        name="paquete_codigo"
+                        class="form-select"
+                        required
+                      >
+                        <option value="">Cargando paquetes...</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label"><i class="bi bi-person"></i>
+                        Repartidor</label
+                      >
+                      <select
+                        name="repartidor_id"
+                        class="form-select"
+                        required
+                      >
+                        <option value="">Cargando repartidores...</option>
+                      </select>
+                    </div>
+                    <div class="col-12 d-grid">
+                      <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-person-plus"></i> Asignar Repartidor
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- Información de ayuda -->
+            <div class="col-lg-4">
+              <div class="card card-border h-100">
+                <div class="card-header">
+                  <h6 class="mb-0">
+                    <i class="bi bi-info-circle"></i> Información
+                  </h6>
+                </div>
+                <div class="card-body">
+                  <p><strong>¿Cómo asignar?</strong></p>
+                  <ol class="small">
+                    <li>Seleccione el paquete de la lista</li>
+                    <li>Seleccione el repartidor de la lista</li>
+                    <li>Haga clic en "Asignar Repartidor"</li>
+                  </ol>
+                  <hr>
+                  <p class="small text-muted">
+                    <i class="bi bi-lightbulb"></i> 
+                    <strong>Tip:</strong> Los repartidores recibirán notificaciones en tiempo real cuando se les asigne un paquete.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-6 col-md-3">
-            <div class="card card-border text-center py-3">
-              <div class="card-body">
-                <i class="bi bi-check2-circle fs-3 text-success"></i>
-                <h5 class="metric-num">${d.entregado}</h5>
-                <p class="text-muted mb-0">Entregados</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="card card-border text-center py-3">
-              <div class="card-body">
-                <i class="bi bi-people fs-3 text-info"></i>
-                <h5 class="metric-num">--</h5>
-                <p class="text-muted mb-0">Clientes Activos</p>
-              </div>
-            </div>
-          </div>`;
-      }
+        </section>
 
-      async function loadUpdates() {
-        const res = await fetch("/paquetes?limit=5").catch(() => {});
-        if (!res || !res.ok) return;
-        const list = await res.json();
-        const container = document.getElementById("recentUpdates");
-        container.innerHTML = list
-          .map(
-            (p) => `
-            <div class="mb-2">
-              <span class="status-pill ${
-                p.estado === "entregado"
-                  ? "success"
-                  : p.estado === "en_transito"
-                  ? "warning"
-                  : "info"
-              }"><i class="bi bi-box"></i>${p.codigo} - ${p.estado.replace("_", " ")}</span><br>
-              <small class="text-muted">${p.ubicacion}</small>
-            </div>`
-          )
-          .join("");
-      }
-
-      // Función para cargar actualizaciones recientes
-      async function loadRecentUpdates() {
-        const container = document.getElementById("recentUpdates");
-        if (!container) return;
-        
-        container.innerHTML = "<div class='text-muted'><i class='bi bi-arrow-clockwise'></i> Cargando…</div>";
-        
-        try {
-          const res = await fetch("/paquetes?limit=5");
-          if (!res.ok) throw new Error();
-          const data = await res.json();
-          
-          container.innerHTML = data.length
-            ? data.map(p => `
-                <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                  <div>
-                    <strong>${p.codigo}</strong><br />
-                    <small class="text-muted"><i class="bi bi-geo-alt"></i> ${p.destinatario} → ${p.ubicacion}</small>
+        <!-- ============ SECCIÓN GESTIÓN USUARIOS (ADMIN) ============== -->
+        <section id="secUsuarios" data-rol="admin">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="card card-border">
+                <div class="card-header card-header-gradient">
+                  <h5 class="mb-0 text-white">
+                    <i class="bi bi-people"></i> Gestión de Usuarios
+                  </h5>
+                  <small class="text-light">
+                    Administre usuarios del sistema
+                  </small>
+                </div>
+                <div class="card-body">
+                  <div id="usuariosTableContainer">
+                    <!-- Aquí se cargará la tabla de usuarios -->
                   </div>
-                  ${pill(p.estado)}
-                </div>`).join("")
-            : `<div class='text-muted'><i class='bi bi-inbox'></i> Sin registros</div>`;
-        } catch (err) {
-          container.innerHTML = `<div class='text-danger'><i class='bi bi-exclamation-triangle'></i> No disponible</div>`;
-        }
-      }
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-      // Configurar el botón de historial cuando el DOM esté listo
-      document.addEventListener("DOMContentLoaded", () => {
-        loadDashboard();
-        loadUpdates();
-        
-        // Configurar el botón "Ver Historial"
-        const historyBtn = document.querySelector("#formActualizar button.btn-outline-secondary");
-        
-        if (historyBtn) {
-          historyBtn.addEventListener("click", async function(e) {
-            e.preventDefault();
-            
-            const codeInput = document.querySelector("#formActualizar input[name='codigo']");
-            const codigo = codeInput ? codeInput.value.trim() : '';
-            
-            if (!codigo) {
-              toastAlert("Por favor, introduce el código de seguimiento primero", "warning");
-              if (codeInput) codeInput.focus();
-              return;
-            }
-            
-            try {
-              toastAlert("Cargando historial...", "info");
-              
-              const res = await fetch(`/paquetes/${encodeURIComponent(codigo)}`);
-              
-              if (!res.ok) {
-                if (res.status === 404) {
-                  toastAlert("No se encontró ningún paquete con ese código", "warning");
-                } else {
-                  throw new Error(`Error ${res.status}`);
-                }
-                return;
-              }
-              
-              const paqueteData = await res.json();
-              showHistoryModal(codigo, paqueteData);
-              
-            } catch (err) {
-              console.error("Error al obtener el historial:", err);
-              toastAlert("No se pudo obtener el historial del paquete. Verifique el código e intente nuevamente.", "danger");
-            }
-          });
-        }
-      });
-    </script>
+        <!-- ============ SECCIÓN DASHBOARD ============== -->
+        <section id="secDashboard" data-rol="operador,repartidor,admin">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="card card-border">
+                <div class="card-header card-header-gradient">
+                  <h5 class="mb-0 text-white">
+                    <i class="bi bi-bar-chart"></i> Dashboard
+                  </h5>
+                  <small class="text-light">
+                    Estadísticas y métricas en tiempo real
+                  </small>
+                </div>
+                <div class="card-body">
+                  <div class="row" id="dashboardInfo">
+                    <!-- Se carga dinámicamente -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ SECCIÓN MIS PAQUETES ============== -->
+        <section id="secMisPaquetes" data-rol="cliente,repartidor">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="card card-border">
+                <div class="card-header card-header-gradient">
+                  <h5 class="mb-0 text-white">
+                    <i class="bi bi-box"></i> Mis Paquetes
+                  </h5>
+                  <small class="text-light">
+                    Lista de paquetes asignados a su cuenta
+                  </small>
+                </div>
+                <div class="card-body">
+                  <div id="misPaquetesList">
+                    <!-- Se carga dinámicamente -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ SECCIÓN MI RUTA (REPARTIDOR) ============== -->
+        <section id="secRuta" data-rol="repartidor">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="card card-border">
+                <div class="card-header card-header-gradient">
+                  <h5 class="mb-0 text-white">
+                    <i class="bi bi-map"></i> Mi Ruta de Entrega
+                  </h5>
+                  <small class="text-light">
+                    Paquetes asignados para entrega hoy
+                  </small>
+                </div>
+                <div class="card-body">
+                  <div id="rutaEntrega">
+                    <!-- Se carga dinámicamente -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script principal -->
+    <script src="script.js"></script>
   </body>
 </html>
