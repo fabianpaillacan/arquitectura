@@ -123,3 +123,17 @@ Este sistema es:
 - **Completo:** Cubre todas las necesidades del negocio y es fácil de aprender y modificar.
 
 Ideal para aprender buenas prácticas de arquitectura, seguridad y experiencia de usuario en sistemas modernos de gestión. 
+
+- **Arquitectura centralizada:**  
+  El sistema es centralizado: toda la lógica de negocio, persistencia y control de acceso reside en el backend (FastAPI + SQLModel + SQLite/PostgreSQL). Los clientes (navegador web) interactúan exclusivamente a través de la API y WebSockets, sin lógica distribuida ni replicación de estado entre nodos. Esto simplifica la gestión, la seguridad y el despliegue, y es adecuado para el tamaño y alcance del proyecto.
+
+- **WebSockets vs. otras alternativas:**  
+  Elegimos WebSockets para la comunicación en tiempo real (por ejemplo, notificaciones instantáneas de asignación de paquetes a repartidores) porque:
+    - Permiten una conexión bidireccional persistente entre cliente y servidor.
+    - Son más eficientes que el polling o long-polling HTTP para notificaciones rápidas y actualizaciones en vivo.
+    - Facilitan la experiencia de usuario reactiva (sin recargar la página ni esperar intervalos).
+    - Son ampliamente soportados por navegadores modernos y frameworks backend.
+  Alternativas como Server-Sent Events (SSE) solo permiten comunicación unidireccional (servidor → cliente), y el polling tradicional es menos eficiente y más lento para este caso de uso.
+
+- **Escalabilidad futura:**  
+  Aunque la arquitectura es centralizada, el uso de WebSockets y la separación clara de frontend/backend permiten migrar a una arquitectura distribuida (por ejemplo, con balanceadores de carga y múltiples instancias del backend) si el sistema crece. Para ello, sería necesario gestionar el estado de las conexiones WebSocket de forma compartida (por ejemplo, usando Redis o un message broker).

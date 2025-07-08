@@ -21,7 +21,7 @@ function toastAlert(msg, type = "info") {
   setTimeout(() => {
     toast.classList.remove("show");      // Quita clase para animar fade out
     setTimeout(() => toast.remove(), 500); // Elimina del DOM tras la animación (0.5s)
-  }, 10000);
+  }, 5000);
 }
 
 
