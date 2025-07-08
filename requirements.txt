@@ -1,8 +1,10 @@
 # Dependencias principales
-#asyncio-extensions==0.1.0
-#dataclasses-json==0.5.14
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+sqlmodel==0.0.14
+sqlalchemy==2.0.23
+pydantic==2.5.0
 python-dotenv==1.0.0
-
 
 # Testing
 pytest==7.4.3
