@@ -6,15 +6,24 @@ let authToken = localStorage.getItem('authToken');
 // ===== FUNCIÓN PARA MOSTRAR ALERTAS TOAST =====
 // Crea y muestra alertas temporales en la esquina superior derecha de la pantalla
 function toastAlert(msg, type = "info") {
-  // Crea un elemento div temporal para contener el HTML del toast
-  const placeholder = document.createElement("div");
-  // Genera el HTML del toast con Bootstrap, incluyendo el mensaje y tipo de alerta
-  placeholder.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3" role="alert" style="z-index:1080;">${msg}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
-  // Añade el toast al body del documento
-  document.body.appendChild(placeholder.firstElementChild);
-  // Elimina el toast después de 5 segundos
-  setTimeout(() => placeholder.remove(), 5000);
+  // Crea el toast
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = `
+    <div class="alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3" role="alert" style="z-index:1080;">
+      ${msg}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  `;
+  const toast = wrapper.firstElementChild;
+  document.body.appendChild(toast);
+
+  // Elimina el toast automáticamente después de 10 segundos
+  setTimeout(() => {
+    toast.classList.remove("show");      // Quita clase para animar fade out
+    setTimeout(() => toast.remove(), 500); // Elimina del DOM tras la animación (0.5s)
+  }, 10000);
 }
+
 
 // ===== FUNCIÓN PARA LOGIN DE USUARIOS DE PRUEBA =====
 function loginTestUser(email, password) {
@@ -139,13 +148,11 @@ function actualizarNavegacionPorRol(rol) {
     repartidor: [
       { id: 'secMisPaquetes', text: 'Mis Paquetes', icon: 'bi-box' },
       { id: 'secActualizar', text: 'Actualizar Estado', icon: 'bi-arrow-repeat' },
-      { id: 'secRuta', text: 'Mi Ruta', icon: 'bi-map' },
       { id: 'secDashboard', text: 'Dashboard', icon: 'bi-bar-chart' }
     ],
     admin: [
       { id: 'secDashboard', text: 'Dashboard', icon: 'bi-bar-chart' },
       { id: 'secUsuarios', text: 'Gestión Usuarios', icon: 'bi-people' },
-      { id: 'secReportes', text: 'Reportes', icon: 'bi-file-earmark-text' },
       { id: 'secRegistro', text: 'Registrar Paquete', icon: 'bi-box' }
     ]
   };
