@@ -20,6 +20,27 @@ body {
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
 }
 
+.user-info-left {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-info-left #userName {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.user-info-left #userRole {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
 #hero h1 {
   font-weight: 700;
   font-size: 1.8rem;

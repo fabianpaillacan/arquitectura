@@ -2,6 +2,7 @@
 let currentUser = null;
 let wsConnection = null;
 let authToken = localStorage.getItem('authToken');
+let refreshToken = localStorage.getItem('refreshToken');
 
 // ===== FUNCIÓN PARA MOSTRAR ALERTAS TOAST =====
 // Crea y muestra alertas temporales en la esquina superior derecha de la pantalla
@@ -135,9 +136,8 @@ function mostrarInterfazPorRol(rol) {
 function actualizarNavegacionPorRol(rol) {
   const navItems = {
     cliente: [
-      { id: 'secCliente', text: 'Seguimiento', icon: 'bi-geo-alt' },
-      { id: 'secMisPaquetes', text: 'Mis Paquetes', icon: 'bi-box' },
-      { id: 'secRegistro', text: 'Comprar Paquete', icon: 'bi-cart-plus' }
+      { id: 'secCliente', text: 'Comprar Paquete', icon: 'bi-cart-plus' },
+      { id: 'secMisPaquetes', text: 'Mis Paquetes', icon: 'bi-box' }
     ],
     operador: [
       { id: 'secRegistro', text: 'Registrar Paquete', icon: 'bi-box' },
@@ -249,16 +249,36 @@ async function fetchAuth(url, options = {}) {
   
   const finalOptions = { ...defaultOptions, ...options };
   
-  const response = await fetch(url, finalOptions);
-  
-  if (response.status === 401) {
-    // Token expirado o inválido
-    localStorage.removeItem('authToken');
-    mostrarLogin();
-    throw new Error('Sesión expirada');
+  try {
+    const response = await fetch(url, finalOptions);
+    
+    // Si el token ha expirado, intentar refrescarlo
+    if (response.status === 401 && refreshToken) {
+      const refreshResponse = await fetch('/auth/refresh', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: refreshToken })
+      });
+      
+      if (refreshResponse.ok) {
+        const refreshData = await refreshResponse.json();
+        authToken = refreshData.access_token;
+        localStorage.setItem('authToken', authToken);
+        
+        // Reintentar la petición original con el nuevo token
+        finalOptions.headers['Authorization'] = `Bearer ${authToken}`;
+        return fetch(url, finalOptions);
+      } else {
+        // Si el refresh también falla, cerrar sesión
+        cerrarSesion();
+        throw new Error('Sesión expirada');
+      }
+    }
+    
+    return response;
+  } catch (error) {
+    throw error;
   }
-  
-  return response;
 }
 
 // ===== FUNCIÓN PARA MOSTRAR LOGIN =====
@@ -275,6 +295,12 @@ function mostrarLogin() {
 function mostrarAplicacion() {
   document.getElementById('loginSection').style.display = 'none';
   document.getElementById('mainContent').style.display = 'block';
+  
+  // Mostrar información del usuario en el header
+  document.getElementById('userInfo').textContent = currentUser.nombre;
+  document.getElementById('userName').textContent = currentUser.nombre;
+  document.getElementById('userRole').textContent = rolToText(currentUser.rol);
+  
   mostrarInterfazPorRol(currentUser.rol);
   conectarWebSocket(currentUser.id);
 
@@ -319,8 +345,10 @@ if (formLogin) {
       }
       const data = await response.json();
       authToken = data.access_token;
+      refreshToken = data.refresh_token;
       currentUser = data.user;
       localStorage.setItem('authToken', authToken);
+      localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
       mostrarAplicacion();
       toastAlert(`Bienvenido, ${currentUser.nombre}!`, "success");
@@ -432,6 +460,37 @@ if (formAsignar) {
       e.target.reset();
     } catch (err) {
       toastAlert("Error al asignar paquete", "danger");
+    }
+  });
+}
+
+// ===== EVENT LISTENER PARA FORMULARIO DE CLIENTE =====
+const formClientePaquete = document.getElementById("formClientePaquete");
+if (formClientePaquete) {
+  formClientePaquete.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const body = {
+      empresa: "Cliente Directo",
+      destinatario: formData.get('destinatario'),
+      telefono: formData.get('telefono'),
+      direccion: formData.get('direccion'),
+      ruta: "Cliente"
+    };
+    
+    try {
+      const res = await fetchAuth("/paquetes", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      toastAlert(`Paquete comprado exitosamente. Código: <strong>${data.codigo}</strong>`, "success");
+      e.target.reset();
+      // Recargar mis paquetes
+      loadMisPaquetes();
+    } catch (err) {
+      toastAlert("Error al comprar paquete", "danger");
     }
   });
 }
@@ -810,9 +869,11 @@ async function loadDashboard() {
 // ===== FUNCIÓN PARA CERRAR SESIÓN =====
 function cerrarSesion() {
   localStorage.removeItem('authToken');
+  localStorage.removeItem('refreshToken');
   localStorage.removeItem('currentUser');
   currentUser = null;
   authToken = null;
+  refreshToken = null;
   
   if (wsConnection) {
     wsConnection.close();
@@ -828,11 +889,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // Verificar si hay una sesión activa
   const savedUser = localStorage.getItem('currentUser');
   const savedToken = localStorage.getItem('authToken');
+  const savedRefreshToken = localStorage.getItem('refreshToken');
   
   if (savedUser && savedToken) {
     try {
       currentUser = JSON.parse(savedUser);
       authToken = savedToken;
+      refreshToken = savedRefreshToken;
       mostrarAplicacion();
     } catch (err) {
       console.error('Error al cargar sesión:', err);
@@ -1034,13 +1097,13 @@ async function loadPaquetesDisponibles() {
 
 // ===== FUNCIÓN PARA CARGAR REPARTIDORES DISPONIBLES =====
 async function loadRepartidores() {
-  const selectRepartidor = document.querySelector('#formAsignar select[name="repartidor_id"]');
-  if (!selectRepartidor) return;
+  const selectRepartidor = document.querySelector('#formAsignar select[name="repartidor_id"]'); //selecciono el select de repartidores
+  if (!selectRepartidor) return; 
   
-  try {
+  try { 
     const res = await fetchAuth('/repartidores');
     if (!res.ok) throw new Error();
-    const repartidores = await res.json();
+    const repartidores = await res.json(); //obtengo los repartidores
     
     // Limpiar opciones existentes
     selectRepartidor.innerHTML = '<option value="">Seleccionar repartidor...</option>';
@@ -1048,17 +1111,17 @@ async function loadRepartidores() {
     // Agregar repartidores disponibles
     repartidores.forEach(repartidor => {
       const option = document.createElement('option');
-      option.value = repartidor.id;
-      option.textContent = `${repartidor.nombre} (${repartidor.id})${repartidor.zona_id ? ` - ${repartidor.zona_id}` : ''}`;
+      option.value = repartidor.id; //asigno el id del repartidor al value del option
+      option.textContent = `${repartidor.nombre} (${repartidor.id})${repartidor.zona_id ? ` - ${repartidor.zona_id}` : ''}`; //asigno el nombre y el id del repartidor al textContent del option
       selectRepartidor.appendChild(option);
     });
     
-    if (repartidores.length === 0) {
+    if (repartidores.length === 0) { //si no hay repartidores disponibles
       selectRepartidor.innerHTML = '<option value="">No hay repartidores disponibles</option>';
-      selectRepartidor.disabled = true;
+      selectRepartidor.disabled = true; //desactivo el select
     }
   } catch (err) {
-    selectRepartidor.innerHTML = '<option value="">Error al cargar repartidores</option>';
+    selectRepartidor.innerHTML = '<option value="">Error al cargar repartidores</option>'; //si hay un error, muestro un mensaje de error
     selectRepartidor.disabled = true;
   }
 }

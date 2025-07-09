@@ -147,7 +147,18 @@
         <div class="container">
           <div class="row align-items-center">
             <div class="col">
-              <h1>
+              <div class="d-flex align-items-center gap-3">
+                <div class="user-info-left">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-person-circle text-primary" style="font-size: 1.5rem;"></i>
+                    <div>
+                      <div id="userName" class="fw-bold text-dark"></div>
+                      <div id="userRole" class="text-muted small"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h1 class="mt-2">
                 <i class="bi bi-box-seam-fill"></i> Sistema de Seguimiento de Paquetería
               </h1>
               <p>Gestión integral de envíos y seguimiento en tiempo real</p>
@@ -506,6 +517,103 @@
                 <div class="card-body">
                   <div class="row" id="dashboardInfo">
                     <!-- Se carga dinámicamente -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ SECCIÓN CLIENTE (COMPRAR PAQUETE) ============== -->
+        <section id="secCliente" data-rol="cliente">
+          <div class="row g-4">
+            <div class="col-lg-7">
+              <div class="card card-border">
+                <div class="card-header card-header-gradient">
+                  <h5 class="mb-0 text-white">
+                    <i class="bi bi-cart-plus"></i> Comprar Paquete
+                  </h5>
+                  <small class="text-light">
+                    Complete sus datos para comprar un paquete
+                  </small>
+                </div>
+                <div class="card-body">
+                  <form id="formClientePaquete" class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label"><i class="bi bi-person"></i> Su Nombre</label>
+                      <input
+                        type="text"
+                        name="destinatario"
+                        class="form-control"
+                        placeholder="Su nombre completo"
+                        required
+                      />
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label"><i class="bi bi-telephone"></i> Su Teléfono</label>
+                      <input
+                        type="tel"
+                        name="telefono"
+                        class="form-control"
+                        placeholder="+34 600 000 000"
+                        required
+                      />
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label"><i class="bi bi-geo-alt"></i> Dirección de Entrega</label>
+                      <input
+                        type="text"
+                        name="direccion"
+                        class="form-control"
+                        placeholder="Calle, número, código postal, ciudad"
+                        required
+                      />
+                    </div>
+                    <div class="col-12 d-grid mt-3">
+                      <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-cart-plus"></i> Comprar Paquete
+                      </button>
+                    </div>
+                  </form>
+                  <div id="clienteMsg" class="mt-3"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Información del proceso -->
+            <div class="col-lg-5">
+              <div class="card card-border h-100">
+                <div class="card-body">
+                  <h5 class="card-title mb-4">
+                    <i class="bi bi-info-circle"></i> Información del Proceso
+                  </h5>
+                  <ul class="list-unstyled lh-lg">
+                    <li>
+                      <span class="status-pill info"
+                        ><i class="bi bi-cart-check"></i> 1. Compra</span
+                      ><br /><small class="text-muted"
+                        >Complete sus datos y confirme la compra</small
+                      >
+                    </li>
+                    <li class="mt-3">
+                      <span class="status-pill warning"
+                        ><i class="bi bi-truck"></i> 2. Envío</span
+                      ><br /><small class="text-muted"
+                        >Su paquete será enviado a su dirección</small
+                      >
+                    </li>
+                    <li class="mt-3">
+                      <span class="status-pill success"
+                        ><i class="bi bi-check-circle"></i> 3. Entrega</span
+                      ><br /><small class="text-muted"
+                        >Recibirá su paquete en la dirección indicada</small
+                      >
+                    </li>
+                  </ul>
+                  <hr>
+                  <div class="alert alert-info">
+                    <i class="bi bi-lightbulb"></i>
+                    <strong>Tip:</strong> Después de comprar, podrá hacer seguimiento de su paquete en la sección "Mis Paquetes".
                   </div>
                 </div>
               </div>
