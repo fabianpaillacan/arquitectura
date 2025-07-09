@@ -11,10 +11,11 @@ import uuid, os, json, asyncio
 from enum import Enum
 from fastapi import status
 import functools
+from src.auth.jwt_handler import jwt_handler
+from src.config import DATABASE_URL, ALLOWED_ORIGINS
 
 
 #  CONFIG BD (SQLite por defecto, Postgres opcional) 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./paquetes.db")
 connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 engine = create_engine(DATABASE_URL, echo=False, connect_args=connect_args)
 
@@ -42,14 +43,14 @@ class AsignacionPaquete(SQLModel, table=True):
     fecha_asignacion: datetime = Field(default_factory=datetime.utcnow)
     activa: bool = True
 
-class Evento(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    fecha: datetime = Field(default_factory=datetime.utcnow)
-    estado: str
-    ubicacion: str
-    paquete_codigo: str = Field(foreign_key="paquete.codigo")
-    usuario_id: Optional[str] = Field(default=None, foreign_key="usuario.id")
-    comentario: Optional[str] = Field(default=None)
+class Evento(SQLModel, table=True): # Tabla de eventos
+    id: int | None = Field(default=None, primary_key=True) # ID del evento
+    fecha: datetime = Field(default_factory=datetime.utcnow) # Fecha del evento
+    estado: str # Estado del paquete
+    ubicacion: str # Ubicación del paquete
+    paquete_codigo: str = Field(foreign_key="paquete.codigo") # Código del paquete
+    usuario_id: Optional[str] = Field(default=None, foreign_key="usuario.id") # ID del usuario que realizó el evento
+    comentario: Optional[str] = Field(default=None) # Comentario del evento
 
 class Paquete(SQLModel, table=True):
     codigo: str = Field(primary_key=True, index=True)
@@ -127,11 +128,11 @@ def get_session():
         yield session
 
 def hash_password(password: str) -> str:
-    # En producción, usar bcrypt
-    return f"hashed_{password}"
+    # Usar bcrypt para hash seguro
+    return jwt_handler.get_password_hash(password)
 
 def verify_password(password: str, hashed: str) -> bool:
-    return hashed == f"hashed_{password}"
+    return jwt_handler.verify_password(password, hashed)
 
 def build_paquete_read(paquete: Paquete, session: Session) -> PaqueteRead:
     # Obtener todos los usuarios para mapear id->nombre
@@ -170,7 +171,7 @@ app = FastAPI(title="Seguimiento de Paquetería API", version="3.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -184,7 +185,7 @@ def create_default_users():
         # Verificar si ya existen usuarios
         existing_users = session.exec(select(Usuario)).all()
         if existing_users:
-            return  # Ya existen usuarios
+            return 
         
         # Crear usuarios predeterminados
         default_users = [
@@ -232,6 +233,38 @@ def create_default_users():
 create_default_users()
 
 # ===== ENDPOINTS DE AUTENTICACIÓN =====
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+@app.post("/auth/refresh")
+def refresh_token(data: RefreshTokenRequest, session: Session = Depends(get_session)):
+    """Refresca el token de acceso usando un refresh token"""
+    payload = jwt_handler.verify_token(data.refresh_token)
+    
+    if not payload or payload.get("type") != "refresh":
+        raise HTTPException(status_code=401, detail="Refresh token inválido")
+    
+    user_id = payload.get("sub")
+    user = session.get(Usuario, user_id)
+    
+    if not user or not user.activo:
+        raise HTTPException(status_code=401, detail="Usuario no válido")
+    
+    # Generar nuevo access token
+    access_token_data = {
+        "sub": user.id,
+        "email": user.email,
+        "nombre": user.nombre,
+        "rol": user.rol.value
+    }
+    
+    new_access_token = jwt_handler.create_access_token(access_token_data)
+    
+    return {
+        "access_token": new_access_token,
+        "token_type": "bearer"
+    }
+
 @app.post("/auth/register", response_model=UsuarioRead)
 def registrar_usuario(data: UsuarioCreate, session: Session = Depends(get_session)):
     # Verificar si el email ya existe
@@ -268,14 +301,29 @@ def login(data: UsuarioLogin, session: Session = Depends(get_session)):
     if not user.activo:
         raise HTTPException(status_code=401, detail="Usuario inactivo")
     
-    # En producción, generar JWT
-    return {"access_token": user.id, "token_type": "bearer", "user": UsuarioRead(
-        id=user.id,
-        email=user.email,
-        nombre=user.nombre,
-        rol=user.rol,
-        zona_id=user.zona_id
-    )}
+    # Generar tokens JWT
+    access_token_data = {
+        "sub": user.id,
+        "email": user.email,
+        "nombre": user.nombre,
+        "rol": user.rol.value
+    }
+    
+    access_token = jwt_handler.create_access_token(access_token_data)
+    refresh_token = jwt_handler.create_refresh_token({"sub": user.id})
+    
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "user": UsuarioRead(
+            id=user.id,
+            email=user.email,
+            nombre=user.nombre,
+            rol=user.rol,
+            zona_id=user.zona_id
+        )
+    }
 
 # ===== GESTIÓN DE WEBSOCKETS =====
 class ConnectionManager:
@@ -325,12 +373,21 @@ manager = ConnectionManager()
 security = HTTPBearer()
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), session: Session = Depends(get_session)) -> Usuario:
-    # En producción, usar JWT real
-    # Aquí simulamos con el token como user_id
-    user_id = credentials.credentials
+    # Verificar y decodificar token JWT
+    token = credentials.credentials
+    payload = jwt_handler.verify_token(token)
+    
+    if not payload or payload.get("type") != "access":
+        raise HTTPException(status_code=401, detail="Token inválido")
+    
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Token inválido")
+    
     user = session.get(Usuario, user_id)
     if not user or not user.activo:
         raise HTTPException(status_code=401, detail="Usuario no válido")
+    
     return user
 
 def verificar_permiso(permiso_requerido: str):
